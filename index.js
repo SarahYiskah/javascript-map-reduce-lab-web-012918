@@ -9000,3 +9000,89 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+
+const issuesWithUpdatedApiUrl = issues
+  .map(issue => Object.assign({}, issue, {
+    url: issue.url.replace('api.github.com', 'api-v2.github.com')
+  }));
+
+const commentCountAcrossIssues = issues
+  .map(issue => issue.comments_count)
+  .reduce((total, count) => total + count, 0);
+
+const openIssues = issues.reduce((openIssues, issue) => {
+  if (issue.state === 'open') {
+    return [...openIssues, issue];
+  }
+
+  return openIssues;
+}, []);
+
+const nonAutomaticIssues = issues.reduce((totalIssues, issue) => {
+  const isAutomaticIssue = issue.body.includes('automatically created by learn.co');
+
+  if (!isAutomaticIssue) {
+    totalIssues.push(issue);
+  }
+
+  return totalIssues;
+}, []);
+
+const $tbody = document.getElementById('results');
+$tbody.innerHTML = nonAutomaticIssues
+  .map(issue => `<tr>
+    <td>${issue.body}</td>
+    <td>${issue.created_at}</td>
+    <td>${issue.state}</td>
+    </tr>`
+  )
+  .join('');
+
+// let issuesWithUpdatedApiUrl = issues.map(function(issue) {
+//   let url = issue.url.substring(22)
+//   return Object.create({}, issue, {'url': `api-v2.github.com${url}`})
+// })
+//
+// let commentsCount = issues.map(function(issue) {
+//   return issue.comments_count
+// })
+//
+// let commentCountAcrossIssues = commentsCount.reduce(function(acc, currentValue, currentIndex, array) {
+//   return acc + currentValue
+// }, 0)
+//
+// let openIssues = issues.filter(function(issue) {
+//   return issue.state === "open"
+// })
+//
+// let nonAutomaticIssues = issues.filter(function(issues) {
+//   return issue.body !== "This pull request has been automatically created by learn.co."
+// })
+//
+// let bodies = nonAutomaticIssues.map(function(issue) {
+//   return issue.body
+// })
+//
+// let states = nonAutomaticIssues.map(function(issue) {
+//   return issue.state
+// })
+//
+// let dates = nonAutomaticIssues.map(function(issue) {
+//   issue.created_at
+// })
+//
+//
+// function createTableData(array) {
+//   let results = document.getElementById(array)
+//   debugger
+//   for(let element of array) {
+//     let td = document.createElement('td')
+//     td.innerText = element
+//     results.append(td)
+//   }
+// }
+//
+// createTableData(bodies);
+// createTableData(dates);
+// createTableData(states);
